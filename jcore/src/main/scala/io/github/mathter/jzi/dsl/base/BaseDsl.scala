@@ -149,7 +149,7 @@ class BaseDsl extends io.github.mathter.zi.dsl.base.BaseDsl with Dsl {
 
     source match {
       case x: BooleanSource => x
-      case x: Source[Boolean] => new BooleanSourceEval(x)
+      case x: Source[lang.Boolean] => new BooleanSourceEval(x)
     }
   }
 
