@@ -100,7 +100,7 @@
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <version>4.8.1</version>
+                    <version>4.9.10</version>
                     <configuration>
                         <!--                        <recompileMode>incremental</recompileMode>-->
                         <scalaVersion>${scala.version}</scalaVersion>
@@ -112,12 +112,63 @@
                                 <goal>testCompile</goal>
                             </goals>
                         </execution>
+                        <execution>
+                            <id>scala-doc-jar</id>
+                            <goals>
+                                <goal>doc-jar</goal>
+                            </goals>
+                            <phase>package</phase>
+                            <configuration>
+                                <scaladocClassName>dotty.tools.scaladoc.Main</scaladocClassName>
+                                <args>
+                                    <arg>-nobootcp</arg>
+                                </args>
+                                <dependencies>
+                                    <dependency>
+                                        <groupId>org.scala-lang</groupId>
+                                        <artifactId>scaladoc_3</artifactId>
+                                        <version>${scala.version}</version>
+                                    </dependency>
+                                </dependencies>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.3</version>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.4.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.11.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <autoPublish>false</autoPublish>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
