@@ -15,9 +15,9 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <scala.version>3.7.1</scala.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <scala.version>3.8.4</scala.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -102,7 +102,7 @@
                     <artifactId>scala-maven-plugin</artifactId>
                     <version>4.9.10</version>
                     <configuration>
-                        <!--                        <recompileMode>incremental</recompileMode>-->
+                        <recompileMode>incremental</recompileMode>
                         <scalaVersion>${scala.version}</scalaVersion>
                     </configuration>
                     <executions>
@@ -128,6 +128,11 @@
                                         <groupId>org.scala-lang</groupId>
                                         <artifactId>scaladoc_3</artifactId>
                                         <version>${scala.version}</version>
+                                    </dependency>
+                                    <dependency>
+                                        <groupId>tools.jackson.core</groupId>
+                                        <artifactId>jackson-databind</artifactId>
+                                        <version>3.1.5</version>
                                     </dependency>
                                 </dependencies>
                             </configuration>
