@@ -2,7 +2,7 @@ package io.github.mathter.zi.dsl.base
 
 import io.github.mathter.zi.data.{Opt, PathMap}
 import io.github.mathter.zi.dsl.base.BaseDsl.DEFAULT_DESTINATION_TAG
-import io.github.mathter.zi.dsl.base.eval.{AbstractEval, AsListSourceEval, ByEval, CalculatedLiteralEval, DistinctEval, FilterEval, GroupEval, IfEval, ListElementByIndexEval, MapElemEval, MapsElemEval, NothingEval, OriginSourceEval, PathMapAcceptor, PathMapByPathAcceptor, ResultEval}
+import io.github.mathter.zi.dsl.base.eval.{AbstractEval, ByEval, CalculatedLiteralEval, DistinctEval, FilterEval, GroupEval, IfEval, ListElementByIndexEval, MapElemEval, MapsElemEval, NothingEval, OriginSourceEval, PathMapAcceptor, PathMapByPathAcceptor, ResultEval}
 import io.github.mathter.zi.dsl.{Acceptor, Dsl, Group, If, Source}
 import io.github.mathter.zi.eval.{Context, Eval, Tracer}
 import io.github.mathter.zi.path.Path
@@ -30,12 +30,9 @@ class BaseDsl extends Dsl {
     new PathMapAcceptor()
   }
 
-  override def literal[T](x: T): Source[T] = {
-    new CalculatedLiteralEval[T](() => x)
-  }
-
-  override def literal[T](f: () => T): Source[T] = {
-    new CalculatedLiteralEval[T](f)
+  override def literal[T](x: => T): Source[T] = {
+    implicit val tracer = Tracer.trace3()
+    new CalculatedLiteralEval[T](x)
   }
 
   override def nothing[T]: Source[T] = {
@@ -45,7 +42,7 @@ class BaseDsl extends Dsl {
 
   override def nil[T]: Source[T] = {
     implicit val tracer = Tracer.trace3()
-    new CalculatedLiteralEval[T](() => null.asInstanceOf[T])
+    new CalculatedLiteralEval[T](null.asInstanceOf[T])
   }
 
   override def fls: Source[Boolean] = {

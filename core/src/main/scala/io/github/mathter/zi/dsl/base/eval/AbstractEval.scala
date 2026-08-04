@@ -4,7 +4,7 @@ import io.github.mathter.zi.data.Opt
 import io.github.mathter.zi.dsl.{Composite, Dsl, Source}
 import io.github.mathter.zi.eval.{Context, Eval, EvalException, Tracer}
 
-abstract class AbstractEval[T](implicit val dsl: Dsl, tracer: Tracer = Tracer.trace5()) extends Eval[T] with Source[T] {
+abstract class AbstractEval[T](implicit val dsl: Dsl, tracer: Tracer = Tracer.trace3()) extends Eval[T] with Source[T] {
   override def maps[D, DS <: Source[D]](f: Source[T] => Source[D]): DS = new MapsEval[T, D](this, f).asInstanceOf[DS]
 
   override def map[D, DS <: Source[D]](f: T => D): DS = new MapEval[T, D](this, f).asInstanceOf[DS]
@@ -78,6 +78,68 @@ abstract class AbstractEval[T](implicit val dsl: Dsl, tracer: Tracer = Tracer.tr
   override def pure: Boolean = false
 
   override def pure(pure: Boolean): Source[T] = this
+
+  override def ifNull(default: => T): Source[T] = {
+    given tracer: Tracer = Tracer.trace3()
+
+    new AbstractEval[T]() {
+      override def evalI(using context: Context): Opt[T] = {
+        val prev = AbstractEval.this.eval
+
+        if (prev.isPresent()) {
+          val value = prev.get
+
+          if (value != null) {
+            prev
+          } else {
+            Opt(default)
+          }
+        } else {
+          prev
+        }
+      }
+    }
+  }
+
+  override def ifEmpty(default: => T): Source[T] = {
+    given tracer: Tracer = Tracer.trace6()
+
+    new AbstractEval[T]() {
+      override def evalI(using context: Context): Opt[T] = {
+        val prev = AbstractEval.this.eval
+
+        if (prev.isPresent()) prev else Opt(default)
+      }
+    }
+  }
+
+  override def ifNullOrEmpty(default: => T): Source[T] = {
+    given tracer: Tracer = Tracer.trace3()
+
+    new AbstractEval[T]() {
+      override def evalI(using context: Context): Opt[T] = {
+        val prev = AbstractEval.this.eval
+
+        if (prev.isPresent()) {
+          val prevValue = prev.get
+
+          if (prevValue != null) {
+            prev
+          } else {
+            Opt(default)
+          }
+        } else {
+          Opt(default)
+        }
+      }
+    }
+  }
+
+  override def errorIfNull: Source[T] = ???
+
+  override def errorIfEmpty: Source[T] = ???
+
+  override def errorIfNullOrEmpty: Source[T] = ???
 
   def evalI(context: Context): Opt[T]
 }
