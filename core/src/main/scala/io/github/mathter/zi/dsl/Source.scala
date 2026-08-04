@@ -24,4 +24,16 @@ trait Source[T] {
   def pure: Boolean
 
   def pure(pure: Boolean): Source[T]
+
+  def ifNull(default: => T): Source[T]
+
+  def ifEmpty(default: => T): Source[T]
+
+  def ifNullOrEmpty(default: => T): Source[T]
+
+  def errorIfNull: Source[T]
+
+  def errorIfEmpty: Source[T]
+
+  def errorIfNullOrEmpty: Source[T]
 }

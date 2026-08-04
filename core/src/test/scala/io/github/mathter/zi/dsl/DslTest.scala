@@ -252,7 +252,7 @@ class DslTest {
     implicit val context: BaseContext = new BaseContext(PathMap.empty)
     implicit val dsl: Dsl = BaseDsl()
     val value = Instant.now()
-    val s = dsl.literal(() => value).pure(true)
+    val s = dsl.literal(value).pure(true)
 
     Assertions.assertNotNull(s)
     Assertions.assertEquals(value, Evaluator.evalSource(s).get)

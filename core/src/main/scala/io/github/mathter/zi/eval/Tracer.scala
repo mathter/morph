@@ -39,7 +39,7 @@ object Tracer {
     tracer
   }
 
-  def trace5(): Tracer = {
+  def trace4(): Tracer = {
     val stackTrace = Thread.currentThread().getStackTrace
     val stack = local.get()
     var prev = if (stack.isEmpty) null else stack.top
@@ -50,6 +50,36 @@ object Tracer {
     }
 
     val tracer = new Tracer(prev, stackTrace(4), stackTrace.length)
+    stack.push(tracer)
+    tracer
+  }
+
+  def trace5(): Tracer = {
+    val stackTrace = Thread.currentThread().getStackTrace
+    val stack = local.get()
+    var prev = if (stack.isEmpty) null else stack.top
+
+    while (prev != null && prev.level >= stackTrace.length) {
+      stack.pop()
+      prev = if (stack.isEmpty) null else stack.top
+    }
+
+    val tracer = new Tracer(prev, stackTrace(5), stackTrace.length)
+    stack.push(tracer)
+    tracer
+  }
+
+  def trace6(): Tracer = {
+    val stackTrace = Thread.currentThread().getStackTrace
+    val stack = local.get()
+    var prev = if (stack.isEmpty) null else stack.top
+
+    while (prev != null && prev.level >= stackTrace.length) {
+      stack.pop()
+      prev = if (stack.isEmpty) null else stack.top
+    }
+
+    val tracer = new Tracer(prev, stackTrace(6), stackTrace.length)
     stack.push(tracer)
     tracer
   }
