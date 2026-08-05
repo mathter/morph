@@ -2,67 +2,92 @@ package io.github.mathter.morph.processing.xml.sax
 
 import io.github.mathter.morph.data.PathMap
 import io.github.mathter.morph.path.Path
-import io.github.mathter.morph.processing.xml.trimToNull
-import org.xml.sax.Attributes
+import io.github.mathter.morph.processing.xml.sax.Listener
+import org.slf4j.LoggerFactory
 import org.xml.sax.ext.DefaultHandler2
+import org.xml.sax.{Attributes, Locator}
 
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 
-class SaxHandler extends DefaultHandler2 {
+private class SaxHandler extends DefaultHandler2 {
+  val handlers: mutable.Set[Handler] = mutable.Set()
 
-  protected var level = -1
+  private val map: mutable.Map[Path, Set[Handler]] = mutable.Map()
 
-  protected val pathByLavel: mutable.Map[Int, mutable.Map[(String, String), Path]] = mutable.Map.empty
+  private val stack: mutable.Stack[PathMap] = mutable.Stack()
 
-  protected val pathStack: mutable.Stack[Path] = mutable.Stack.empty
+  private var level = -1
 
-  protected val pathMapStack: mutable.Stack[PathMap] = mutable.Stack.empty
+  private var locator: Locator = _
 
-  protected var content: String = null
+  private var systemId: String = _
 
-  def result: PathMap = this.pathMapStack.head
+  private var publicId: String = _
 
-  def clear(): Unit = {
-    this.level = -1
-    this.pathByLavel.clear()
-    this.pathStack.clear()
-    this.pathMapStack.clear()
-    this.content = null
+  private var path: Path = _
+
+  def this(listeners: Set[Listener]) = {
+    this()
+    this.handlers.addAll(listeners.map(Handler(_)))
   }
 
-  override def startDocument(): Unit = this.pathMapStack.push(PathMap.empty)
+  override def startDocument(): Unit = {
+    SaxHandler.log.info("Start parsing publicId={}, systemId={}", this.publicId, this.systemId)
+  }
+
+  override def endDocument(): Unit = {
+    SaxHandler.log.info("Complete parsing publicId={}, systemId={}", this.publicId, this.systemId)
+  }
 
   override def startElement(uri: String, localName: String, qName: String, attributes: Attributes): Unit = {
     this.level += 1
+    this.path(uri, qName)
 
-    val trimUri = uri.trimToNull
-    val path = this.pathByLavel.getOrElseUpdate(this.level, mutable.Map.empty)
-      .getOrElseUpdate((qName, trimUri), Path(qName, trimUri))
-
-    this.pathStack.push(path)
-    this.pathMapStack.push(PathMap.empty)
-    this.content = ""
+    this.map.getOrElseUpdate(
+        this.path,
+        this.handlers
+          .filter(handler =>
+            handler.root.isParentOf(this.path)
+              || handler.related.exists(_.isParentOf(this.path)))
+          .toSet
+      )
+      .foreach(_.startElement(this.path))
   }
 
   override def endElement(uri: String, localName: String, qName: String): Unit = {
+    this.map.getOrElse(this.path, mutable.Set[Handler]())
+      .foreach(_.endElement(this.path))
+
     this.level -= 1
-
-    val path = this.pathStack.pop()
-
-    if (this.content != null) {
-      this.pathMapStack.pop()
-      this.pathMapStack.head.put(path, this.content)
-    } else {
-      val pathMap = this.pathMapStack.pop()
-      this.pathMapStack.head.put(path, pathMap)
-    }
-
-    this.content = null
+    this.path = this.path.parent
   }
 
   override def characters(ch: Array[Char], start: Int, length: Int): Unit = {
-    if (this.content != null) {
-      this.content += new String(ch, start, length)
-    }
+    this.map.getOrElse(this.path, Set[Handler]())
+      .foreach(_.characters(ch, start, length))
   }
+
+  override def setDocumentLocator(locator: Locator): Unit = {
+    this.locator = locator;
+    this.systemId = locator.getSystemId
+    this.publicId = locator.getPublicId
+  }
+
+  inline def path(uri: String, name: String): Unit = {
+    val fullName = if (uri != null) {
+      if (uri.isBlank) {
+        name.trim
+      } else {
+        uri.trim + ":" + name.trim
+      }
+    } else {
+      name.trim
+    }
+
+    this.path = if (this.path == null) fullName else this.path.path(fullName)
+  }
+}
+
+object SaxHandler {
+  private val log = LoggerFactory.getLogger(SaxHandler.getClass)
 }

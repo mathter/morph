@@ -1,8 +1,8 @@
-package io.github.mathter.morph.processing.ext.xml.sax
+package io.github.mathter.morph.processing.xml.sax
 
 import io.github.mathter.morph.data.PathMap
-import io.github.mathter.morph.processing.ext.AbstractListener
 import io.github.mathter.morph.processing.json.JsonSerializer
+import io.github.mathter.morph.processing.xml.sax.{AbstractListener, SaxXmlTransformer}
 
 import java.io.InputStream
 import javax.xml.parsers.SAXParserFactory

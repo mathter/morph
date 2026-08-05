@@ -1,6 +1,6 @@
 package io.github.mathter.morph.processing.json
 
-import io.github.mathter.morph.processing.xml.sax.ParserFactory
+import io.github.mathter.morph.processing.xml.simple.ParserFactory
 import org.junit.jupiter.api.Test
 
 import scala.xml.InputSource

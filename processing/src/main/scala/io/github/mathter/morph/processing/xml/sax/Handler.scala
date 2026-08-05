@@ -1,9 +1,9 @@
-package io.github.mathter.morph.processing.ext.xml.sax
+package io.github.mathter.morph.processing.xml.sax
 
 import io.github.mathter.morph.data.PathMap
 import io.github.mathter.morph.path.Path
-import io.github.mathter.morph.processing.ext.Listener
-import io.github.mathter.morph.processing.ext.xml.sax.Loading.{NONE, RELATED, ROOT}
+import Loading.{NONE, RELATED, ROOT}
+import io.github.mathter.morph.processing.xml.sax.Listener
 import org.xml.sax.Attributes
 
 import scala.collection.mutable

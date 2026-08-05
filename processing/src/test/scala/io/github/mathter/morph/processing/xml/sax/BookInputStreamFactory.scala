@@ -1,4 +1,4 @@
-package io.github.mathter.morph.processing.ext.xml.sax
+package io.github.mathter.morph.processing.xml.sax
 
 import java.io.InputStream
 

@@ -1,6 +1,6 @@
-package io.github.mathter.morph.processing.xml.sax
+package io.github.mathter.morph.processing.xml.simple
 
-import io.github.mathter.morph.processing.xml.{XmlParser, XmlParserFactory}
+import io.github.mathter.morph.processing.xml.simple.{XmlParser, XmlParserFactory}
 
 import javax.xml.parsers.SAXParserFactory
 
