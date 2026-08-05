@@ -1,6 +1,5 @@
 package io.github.mathter.jmorph.dsl;
 
-import io.github.mathter.morph.dsl.LiteralDsl;
 import io.github.mathter.morph.dsl.OriginDsl;
 import io.github.mathter.morph.dsl.ResultDsl;
 import io.github.mathter.morph.dsl.Source;

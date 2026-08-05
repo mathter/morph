@@ -8,9 +8,7 @@ import io.github.mathter.morph.eval.Terminal
 import io.github.mathter.morph.processing.json.JsonSerializer
 import io.github.mathter.morph.processing.xml.sax.{AbstractListener, SaxXmlTransformer}
 
-import java.io.InputStream
 import java.time.LocalDate
-import java.util
 import javax.xml.parsers.SAXParserFactory
 import javax.xml.transform.stream.StreamSource
 import scala.util.Using

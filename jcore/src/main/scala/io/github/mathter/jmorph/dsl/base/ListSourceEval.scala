@@ -1,6 +1,6 @@
 package io.github.mathter.jmorph.dsl.base
 
-import BaseDsl.{*, given}
+import io.github.mathter.jmorph.dsl.base.BaseDsl.{*, given}
 import io.github.mathter.jmorph.dsl.{Group, ListSource}
 import io.github.mathter.morph.data.Opt
 import io.github.mathter.morph.dsl.base.eval.AbstractEval
