@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public interface Dsl extends
-        LiteralDsl,
         OriginDsl,
         ResultDsl {
     public StringSource asStringSource(Source<String> source);
@@ -35,6 +34,8 @@ public interface Dsl extends
     public <T> ListSource<T> asListSource(Source<List<T>> source);
 
     public BooleanSource asBooleanSource(Source<Boolean> source);
+
+    public <T> Source<T> literal(T value);
 
     public NumberSource<Byte> literal(Byte value);
 
@@ -64,5 +65,5 @@ public interface Dsl extends
 
     public <T> ListSource<T> literal(List<T> literal);
 
-    public <T> T first(Source<List<T>> source);
+    public <T> ListSource<T> listLiteral(Supplier<List<T>> supplier);
 }

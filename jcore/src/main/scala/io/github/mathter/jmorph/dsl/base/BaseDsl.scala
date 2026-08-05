@@ -1,11 +1,11 @@
 package io.github.mathter.jmorph.dsl.base
 
-import JavaNumeric.*
+import io.github.mathter.jmorph.dsl.base.JavaNumeric.*
 import io.github.mathter.jmorph.dsl.{BooleanSource, Dsl, ListSource, NumberSource, StringSource}
-import io.github.mathter.morph.data.Opt
+import io.github.mathter.morph.data.{Opt, PathMap}
 import io.github.mathter.morph.dsl.base.eval.AbstractEval
 import io.github.mathter.morph.dsl.base.given
-import io.github.mathter.morph.dsl.{Source, Dsl as zDsl}
+import io.github.mathter.morph.dsl.{Acceptor, Source, base, Dsl as zDsl}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 
 import java.math.{BigDecimal, BigInteger}
@@ -13,11 +13,11 @@ import java.util.function.Supplier
 import java.{lang, util}
 import scala.jdk.CollectionConverters
 
-class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
+class BaseDsl extends Dsl {
+  given dsl: zDsl = new base.BaseDsl
+
   override def asStringSource(source: Source[String]): StringSource = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     source match {
       case x: StringSource => x
@@ -30,8 +30,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def asByteSource(source: Source[lang.Byte]): NumberSource[lang.Byte] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[lang.Byte] = Numeric[lang.Byte]
 
     source match {
@@ -42,8 +40,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def asShortSource(source: Source[lang.Short]): NumberSource[lang.Short] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[lang.Short] = Numeric[lang.Short]
 
@@ -56,8 +52,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def asIntSource(source: Source[Integer]): NumberSource[Integer] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[lang.Integer] = Numeric[lang.Integer]
 
     source match {
@@ -68,8 +62,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def asLongSource(source: Source[lang.Long]): NumberSource[lang.Long] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[lang.Long] = Numeric[lang.Long]
 
@@ -82,8 +74,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def asFloatSource(source: Source[lang.Float]): NumberSource[lang.Float] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[lang.Float] = Numeric[lang.Float]
 
     source match {
@@ -94,8 +84,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def asDoubleSource(source: Source[lang.Double]): NumberSource[lang.Double] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[lang.Double] = Numeric[lang.Double]
 
@@ -108,8 +96,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def asBigIntegerSource(source: Source[BigInteger]): NumberSource[BigInteger] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[java.math.BigInteger] = Numeric[java.math.BigInteger]
 
     source match {
@@ -120,8 +106,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def asBigDecimalSource(source: Source[BigDecimal]): NumberSource[BigDecimal] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[java.math.BigDecimal] = Numeric[java.math.BigDecimal]
 
@@ -134,8 +118,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def asListSource[T](source: Source[util.List[T]]): ListSource[T] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     source match {
       case x: ListSourceEval[T] => x
       case x: Source[List[T]] => new ListSourceEval[T](x);
@@ -145,18 +127,20 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def asBooleanSource(source: Source[lang.Boolean]): BooleanSource = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     source match {
       case x: BooleanSource => x
       case x: Source[lang.Boolean] => new BooleanSourceEval(x)
     }
   }
 
-  override def literal(literal: lang.Byte): NumberSource[lang.Byte] = {
+  override def literal[T](value: T): Source[T] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
+    this.dsl.literal(value)
+  }
+
+  override def literal(literal: lang.Byte): NumberSource[lang.Byte] = {
+    given tracer: Tracer = Tracer.trace3()
 
     given num: Numeric[lang.Byte] = Numeric[lang.Byte]
 
@@ -166,8 +150,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal(literal: lang.Short): NumberSource[lang.Short] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[Short] = Numeric[Short]
 
     new NumberSourceEval[lang.Short]((context: Context) => Opt(literal))
@@ -175,8 +157,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def literal(literal: Integer): NumberSource[Integer] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[Integer] = Numeric[Integer]
 
@@ -186,8 +166,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal(literal: lang.Long): NumberSource[lang.Long] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[lang.Long] = Numeric[lang.Long]
 
     new NumberSourceEval[lang.Long]((context: Context) => Opt(literal))
@@ -195,8 +173,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def literal(literal: lang.Float): NumberSource[lang.Float] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[lang.Float] = Numeric[lang.Float]
 
@@ -206,8 +182,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal(literal: lang.Double): NumberSource[lang.Double] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[lang.Double] = Numeric[lang.Double]
 
     new NumberSourceEval[lang.Double]((context: Context) => Opt(literal))
@@ -216,8 +190,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal(literal: BigInteger): NumberSource[BigInteger] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     given num: Numeric[BigInteger] = Numeric[BigInteger]
 
     new NumberSourceEval[BigInteger]((context: Context) => Opt(literal))
@@ -225,8 +197,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
 
   override def literal(literal: BigDecimal): NumberSource[BigDecimal] = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Numeric[BigDecimal] = Numeric[BigDecimal]
 
@@ -237,8 +207,6 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
     val value: T = supplier.get();
 
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     given num: Integral[T] = (value match {
       case x: lang.Byte => Integral[lang.Byte]
@@ -257,15 +225,11 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal(value: String): StringSource = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     new StringSourceEval(context => Opt(value))
   }
 
   override def stringLiteral(supplier: Supplier[String]): StringSource = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     new StringSourceEval(context => Opt(supplier.get()))
   }
@@ -273,15 +237,11 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal(literal: lang.Boolean): BooleanSource = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
     new BooleanSourceEval(context => Opt(literal))
   }
 
   override def booleanLiteral(supplier: Supplier[lang.Boolean]): BooleanSource = {
     given tracer: Tracer = Tracer.trace3()
-
-    given dsl: BaseDsl = this
 
     new BooleanSourceEval(context => Opt(supplier.get()))
   }
@@ -289,12 +249,20 @@ class BaseDsl extends io.github.mathter.morph.dsl.base.BaseDsl with Dsl {
   override def literal[T](literal: util.List[T]): ListSource[T] = {
     given tracer: Tracer = Tracer.trace3()
 
-    given dsl: BaseDsl = this
-
-    new ListSourceEval[T](dsl.asInstanceOf[zDsl].literal(literal))
+    new ListSourceEval[T](dsl.literal(literal))
   }
 
-  override def first[T](source: Source[util.List[T]]): T = ???
+  override def listLiteral[T](supplier: Supplier[util.List[T]]): ListSource[T] = {
+    given tracer: Tracer = Tracer.trace3()
+
+    new ListSourceEval[T](dsl.literal(supplier.get()))
+  }
+
+  override def origin: Source[PathMap] = this.dsl.origin
+
+  override def result[T]: Acceptor[T] = this.dsl.result
+
+  override def result[T](tag: Source[Any]): Acceptor[T] = this.dsl.result(tag)
 }
 
 object BaseDsl {
@@ -310,6 +278,8 @@ object BaseDsl {
         )
       }
     }
+
+
   }
 
   def listSource2JavaListSource[T](x: Source[List[T]]): ListSource[T] = {
