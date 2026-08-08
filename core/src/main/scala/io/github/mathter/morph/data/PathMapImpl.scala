@@ -3,11 +3,9 @@ package io.github.mathter.morph.data
 import io.github.mathter.morph.path.Path
 
 import java.util
-import scala.collection
-import scala.collection.generic.DefaultSerializationProxy
-import scala.collection.{Factory, mutable}
+import scala.collection.mutable
 
-private class EPathMap(private val map: InnerMap = new InnerMap) extends PathMap with Serializable {
+private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) extends PathMap with Serializable {
   override def apply[T](path: Path): Opt[T] = {
     val paths = path.expand.map(_.local)
     val valuesMapList: List[InnerMap] = if (paths.length > 1) {
@@ -24,7 +22,7 @@ private class EPathMap(private val map: InnerMap = new InnerMap) extends PathMap
     values.length match {
       case 0 => Opt.empty[T]
       case 1 => Opt(values.head.asInstanceOf[T])
-      case _ => Opt(values.asInstanceOf[T])
+      case _ => Opt(this.translateList(values).asInstanceOf[T])
     }
   }
 
@@ -59,7 +57,7 @@ private class EPathMap(private val map: InnerMap = new InnerMap) extends PathMap
 
       if (element == null) {
         val newMap = new InnerMap
-        val newQueue = EPathMap.newQueue :+ newMap
+        val newQueue = InnerMap.newQueue :+ newMap
         tmp.put(paths(i), newQueue)
         tmp = newMap
       } else {
@@ -70,7 +68,13 @@ private class EPathMap(private val map: InnerMap = new InnerMap) extends PathMap
       }
     }
 
-    tmp.getOrElseUpdate(paths.last, EPathMap.newQueue).addOne(this.translate(value))
+    import scala.jdk.CollectionConverters.*
+
+    this.translate(value) match {
+      case x: List[?] => tmp.getOrElseUpdate(paths.last, InnerMap.newQueue).addAll(x)
+      case x: util.List[?] => tmp.getOrElseUpdate(paths.last, InnerMap.newQueue).addAll(x.asScala)
+      case x => tmp.getOrElseUpdate(paths.last, InnerMap.newQueue).addOne(x)
+    }
   }
 
   override def keys: Set[Path] = this.map.keySet.toSet
@@ -140,32 +144,48 @@ private class EPathMap(private val map: InnerMap = new InnerMap) extends PathMap
       })
   }
 
-  private def reverseTranslate(value: Any): Any = {
+  protected def translate(value: Any): Any = {
+    value match {
+      case map: AbstractPathMap => map.map
+      case _ => value
+    }
+  }
+
+  protected def reverseTranslate(value: Any): Any
+
+  protected def translateList[E](x: List[E]): Any
+}
+
+private class EPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) {
+  protected def reverseTranslate(value: Any): Any = {
     value match {
       case map: InnerMap => new EPathMap(map)
       case _ => value
     }
   }
 
-  private def translate(value: Any): Any = {
+  override def asJava: JPathMap = new JEPathMap(this.map)
+
+  override def asScala: PathMap = this
+
+  override inline protected def translateList[E](x: List[E]): Any = x
+}
+
+private class JEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with JPathMap {
+  protected def reverseTranslate(value: Any): Any = {
     value match {
-      case map: EPathMap => map.map
+      case map: InnerMap => new EPathMap(map)
       case _ => value
     }
   }
-}
 
-private object EPathMap {
-  private def newQueue: mutable.Queue[Any] = mutable.Queue.empty
-}
+  override def asJava: JPathMap = this
 
-class InnerMap extends mutable.LinkedHashMap[Path, mutable.Queue[Any]] with Serializable {
-  protected override def writeReplace(): AnyRef = new DefaultSerializationProxy(new DeserializationFactory, this)
+  override def asScala: PathMap = new EPathMap(this.map)
 
-  private class DeserializationFactory extends Factory[(Path, mutable.Queue[Any]), InnerMap] with Serializable {
-    override def fromSpecific(it: IterableOnce[(Path, mutable.Queue[Any])]): InnerMap = new InnerMap().addAll(it)
+  override inline protected def translateList[E](x: List[E]): Any = {
+    import scala.jdk.CollectionConverters.*
 
-    override def newBuilder: mutable.Builder[(Path, mutable.Queue[Any]), InnerMap] =
-      new mutable.GrowableBuilder(new InnerMap())
+    x.asJava
   }
 }

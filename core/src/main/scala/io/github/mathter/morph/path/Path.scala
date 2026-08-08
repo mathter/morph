@@ -39,15 +39,19 @@ object Path {
 
   val SEGMENT_SEGMENTQ_DELIMITER = ":"
 
-  def apply(segment: String): Path = {
+  inline def apply(segment: String): Path = {
     this.apply(segment, null)
   }
 
-  def apply(segment: String, segmentQ: String | Null): Path = {
+  def of(segment: String): Path = this.apply(segment)
+
+  inline def apply(segment: String, segmentQ: String | Null): Path = {
     segment.split(Path.DELIMITER)
       .filter(e => e != null && !"".equals(e))
       .foldLeft[Path](null)((left, right) => if (left == null) EPathFactory.of(right, segmentQ, null) else left.path(right))
   }
+
+  def of(segment: String, segmentQ: String | Null): Path = this.apply(segment, segmentQ)
 
   def unapply(x: Path): (String, String, Path) = {
     (x.segment, x.segmentQ, x.parent)

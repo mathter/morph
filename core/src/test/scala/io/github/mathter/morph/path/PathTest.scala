@@ -3,7 +3,7 @@ package io.github.mathter.morph.path
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.{Assertions, Test}
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.{Arguments, ArgumentsProvider, ArgumentsSource, MethodSource}
+import org.junit.jupiter.params.provider.{Arguments, ArgumentsProvider, ArgumentsSource}
 import org.junit.jupiter.params.support.ParameterDeclarations
 
 import java.util.stream
@@ -156,18 +156,18 @@ class PathTest extends ArgumentsProvider {
   override def provideArguments(parameters: ParameterDeclarations, context: ExtensionContext): stream.Stream[_ <: Arguments] = {
     stream.Stream.of(
       Arguments.of(
-        "/segment0/segment1",
-        "/segment0/segment1/segment2/segmnt3",
-        "/segment2/segmnt3"
+        Path("/segment0/segment1"),
+        Path("/segment0/segment1/segment2/segmnt3"),
+        Path("/segment2/segmnt3")
       ),
       Arguments.of(
-        "segment0",
-        "segment1",
+        Path("segment0"),
+        Path("segment1"),
         null
       ),
       Arguments.of(
-        "segment0/segment1",
-        "segment0",
+        Path("segment0/segment1"),
+        Path("segment0"),
         null
       )
     )

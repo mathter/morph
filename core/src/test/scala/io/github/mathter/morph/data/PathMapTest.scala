@@ -25,7 +25,7 @@ class PathMapTest {
     val authorName1 = randomStrings.nextAlphabetic(10)
     val authorLastName1 = randomStrings.nextAlphabetic(10)
 
-    val isbn: Path = "usbn"
+    val isbn: Path = "isbn"
     val isbnValue = randomStrings.nextAlphabetic(10)
 
     val year: Path = "year"

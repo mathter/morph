@@ -63,9 +63,11 @@ sealed abstract class Opt[+A] extends IterableOnce[A] with Product with Serializ
 }
 
 object Opt {
-  inline def apply[A](x: A): Opt[A] = Some(x)
+  def apply[A](x: A): Opt[A] = Some(x)
 
-  inline def empty[A]: Opt[A] = None
+  def of[A](x: A): Opt[A] = Some(x)
+
+  def empty[A]: Opt[A] = None
 
   private final case class Some[+A](value: A) extends Opt[A] {
     infix def get: A = value
