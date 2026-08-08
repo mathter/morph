@@ -2,6 +2,11 @@ package io.github.mathter.morph.dsl
 
 import io.github.mathter.morph.dsl.Source
 
+/**
+ * String-specific helpers for `Source[String]` instances. Provides common
+ * string operations such as case conversion, trimming, inspection and simple
+ * regex matching implemented as DSL transformations.
+ */
 implicit class StringSourceOps(private val x: Source[String]) {
   def toUpperCase: Source[String] = x.custom(s => s.toUpperCase)
 

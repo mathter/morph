@@ -139,7 +139,8 @@ abstract class AbstractEval[T](implicit val dsl: Dsl, tracer: Tracer = Tracer.tr
 
   override def errorIfEmpty: Source[T] = ???
 
-  override def errorIfNullOrEmpty: Source[T] = ???
+  override def
+  errorIfNullOrEmpty: Source[T] = ???
 
   def evalI(context: Context): Opt[T]
 }

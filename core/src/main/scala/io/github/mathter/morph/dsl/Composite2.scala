@@ -2,6 +2,10 @@ package io.github.mathter.morph.dsl
 
 import scala.reflect.ClassTag
 
+/**
+ * Composite builder combining four sources. Provides `fun` to compute a
+ * derived value and `composite` to add an additional source.
+ */
 trait Composite2[T, T0, T1, T2] {
   def fun[D](f: (T, T0, T1, T2) => D)(implicit ctag: ClassTag[D]): Source[D]
 
