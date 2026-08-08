@@ -5,6 +5,28 @@ import io.github.mathter.morph.path.Path
 import java.util
 import scala.collection.mutable
 
+/**
+ * Internal base implementation of [[PathMap]] backed by an [[InnerMap]].
+ *
+ * This abstract class provides the shared logic for storing, retrieving and
+ * traversing hierarchical path-based data. It is not part of the public API
+ * surface and is marked `private` to the package implementation.
+ *
+ * Responsibilities:
+ *  - Maintain the mutable backing [[InnerMap]] instance
+ *  - Implement common retrieval semantics used by both Scala and Java views
+ *    (e.g. [[apply]] and [[iget]])
+ *  - Provide generic flattening helpers (`flat` / `flatAsJava`) used by
+ *    concrete subclasses to produce Scala and Java maps respectively
+ *  - Define translation hooks ([[reverseTranslate]] and [[translateList]])
+ *    that convert between raw backing values and higher-level [[PathMap]]
+ *    and collection types. Concrete subclasses must implement these hooks to
+ *    control whether lists are exposed as Scala `List` or Java `List`.
+ *
+ * Note: implementations assume `InnerMap` stores collections of values for
+ * each path segment and that nested `InnerMap` instances represent nested
+ * PathMap structures.
+ */
 private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) extends PathMap with Serializable {
   override def apply[T](path: Path): Opt[T] = {
     val paths = path.expand.map(_.local)
@@ -148,6 +170,17 @@ private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) 
   protected def translateList[E](x: List[E]): Any
 }
 
+/**
+ * Scala-oriented `PathMap` implementation.
+ *
+ * This implementation exposes list values as Scala `List` instances and is the
+ * natural view for Scala callers. Conversions to Java views are provided via
+ * [[asJava]] which produces a [[JEPathMap]] backed by the same underlying
+ * `InnerMap`.
+ *
+ * @param map the backing [[InnerMap]] instance (shared by views produced by
+ *            asJava/asScala when appropriate)
+ */
 private class EPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) {
   protected def reverseTranslate(value: Any): Any = {
     value match {
@@ -163,6 +196,18 @@ private class EPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map
   override inline protected def translateList[E](x: List[E]): Any = x
 }
 
+/**
+ * Java-oriented `PathMap` implementation (JPathMap).
+ *
+ * This implementation presents list values as `java.util.List` (see
+ * [[translateList]] behavior) so Java callers get the familiar collection
+ * types. `asScala` returns an [[EPathMap]] view backed by the same
+ * `InnerMap` so conversions between views are cheap and reflect the same
+ * underlying data (i.e. they are backed, not defensive copies).
+ *
+ * @param map the backing [[InnerMap]] instance (shared by views produced by
+ *            asJava/asScala when appropriate)
+ */
 private class JEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with JPathMap {
   protected def reverseTranslate(value: Any): Any = {
     value match {
