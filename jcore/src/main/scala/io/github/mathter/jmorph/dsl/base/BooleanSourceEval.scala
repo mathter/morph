@@ -42,6 +42,6 @@ class BooleanSourceEval(private val eval: Eval[Boolean])(implicit dsl: Dsl, trac
   override def `then`[T](source: Source[T]): Then[T] = {
     given dsl: Dsl = this.dsl
 
-    this.dsl.`if`(this.asInstanceOf[Source[scala.Boolean]]).Then(source)
+    this.dsl.when(this.asInstanceOf[Source[scala.Boolean]]).Then(source)
   }
 }

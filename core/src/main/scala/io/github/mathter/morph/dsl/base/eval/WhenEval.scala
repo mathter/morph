@@ -1,10 +1,10 @@
 package io.github.mathter.morph.dsl.base.eval
 
 import io.github.mathter.morph.data.Opt
-import io.github.mathter.morph.dsl.{Dsl, Else, If, Source, Then}
+import io.github.mathter.morph.dsl.{Dsl, Else, When, Source, Then}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 
-class IfEval[T](val conditionEval: Eval[Boolean])(implicit dsl: Dsl, tracer: Tracer) extends AbstractEval[T], If[T], Then[T], Else[T] {
+class WhenEval[T](val conditionEval: Eval[Boolean])(implicit dsl: Dsl, tracer: Tracer) extends AbstractEval[T], When[T], Then[T], Else[T] {
   private var thenEval: Eval[T] = null;
 
   private var elseEval: Eval[T] = null;
@@ -32,14 +32,31 @@ class IfEval[T](val conditionEval: Eval[Boolean])(implicit dsl: Dsl, tracer: Tra
     this
   }
 
+  inline infix override def `then`(source: Source[T]): Then[T] = {
+    Tracer.trace3()
+    this.thenEval = source.asInstanceOf[Eval[T]]
+    this
+  }
+
   override def Else(source: Source[T]): Else[T] = {
     Tracer.trace3()
     this.elseEval = source.asInstanceOf[Eval[T]]
     this
   }
 
-  override def If[T](condition: Source[Boolean]): If[T] = {
+  inline infix override def `else`(source: Source[T]): Else[T] = {
     Tracer.trace3()
-    new IfEval[T](condition.asInstanceOf[Eval[Boolean]])
+    this.elseEval = source.asInstanceOf[Eval[T]]
+    this
+  }
+
+  override def If[T](condition: Source[Boolean]): When[T] = {
+    Tracer.trace3()
+    new WhenEval[T](condition.asInstanceOf[Eval[Boolean]])
+  }
+
+  override def `if`(condition: Source[Boolean]): When[T] = {
+    Tracer.trace3()
+    new WhenEval[T](condition.asInstanceOf[Eval[Boolean]])
   }
 }

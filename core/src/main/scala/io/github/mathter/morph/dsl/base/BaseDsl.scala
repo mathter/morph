@@ -2,8 +2,8 @@ package io.github.mathter.morph.dsl.base
 
 import io.github.mathter.morph.data.{Opt, PathMap}
 import io.github.mathter.morph.dsl.base.BaseDsl.DEFAULT_DESTINATION_TAG
-import io.github.mathter.morph.dsl.base.eval.{AbstractEval, ByEval, CalculatedLiteralEval, DistinctEval, FilterEval, GroupEval, IfEval, ListElementByIndexEval, MapElemEval, MapsElemEval, NothingEval, OriginSourceEval, PathMapAcceptor, PathMapByPathAcceptor, ResultEval}
-import io.github.mathter.morph.dsl.{Acceptor, Dsl, Group, If, Source}
+import io.github.mathter.morph.dsl.base.eval.{AbstractEval, ByEval, CalculatedLiteralEval, DistinctEval, FilterEval, GroupEval, WhenEval, ListElementByIndexEval, MapElemEval, MapsElemEval, NothingEval, OriginSourceEval, PathMapAcceptor, PathMapByPathAcceptor, ResultEval}
+import io.github.mathter.morph.dsl.{Acceptor, Dsl, Group, When, Source}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 import io.github.mathter.morph.path.Path
 
@@ -94,9 +94,9 @@ class BaseDsl extends Dsl {
     new MapsElemEval[T, D](source.asInstanceOf[Eval[List[T]]], f)
   }
 
-  override def `if`[T](condition: Source[Boolean]): If[T] = {
+  override def when[T](condition: Source[Boolean]): When[T] = {
     implicit val tracer = Tracer.trace3()
-    new IfEval[T](condition.asInstanceOf[Eval[Boolean]])
+    new WhenEval[T](condition.asInstanceOf[Eval[Boolean]])
   }
 
   override def group[K, E](source: Source[List[E]], key: Source[E] => Source[K]): Group[K, E] = {

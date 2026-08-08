@@ -17,5 +17,5 @@ implicit class BooleanOps(x: Source[Boolean]) {
 
   infix inline def ^(y: Source[Boolean]): Source[Boolean] = this.xor(y)
 
-  infix inline def Then[T](source: Source[T]): Then[T] = x.dsl.`if`(x).Then(source)
+  infix inline def Then[T](source: Source[T]): Then[T] = x.dsl.when(x).Then(source)
 }

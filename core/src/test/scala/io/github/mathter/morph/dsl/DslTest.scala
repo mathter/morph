@@ -204,7 +204,7 @@ class DslTest {
   def testIf0(): Unit = {
     implicit val context: BaseContext = new BaseContext(PathMap.empty)
     val dsl: Dsl = BaseDsl()
-    val s = dsl.`if`(dsl.tr).Then(dsl.literal("Then"))
+    val s = dsl.when(dsl.tr).Then(dsl.literal("Then"))
 
     Assertions.assertEquals("Then", Evaluator.evalSource(s).get)
   }
@@ -213,7 +213,7 @@ class DslTest {
   def testIf1(): Unit = {
     implicit val context: BaseContext = new BaseContext(PathMap.empty)
     val dsl: Dsl = BaseDsl()
-    val s = dsl.`if`(dsl.tr).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
+    val s = dsl.when(dsl.tr).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
 
     Assertions.assertEquals("Then", Evaluator.evalSource(s).get)
   }
@@ -222,7 +222,7 @@ class DslTest {
   def testIf2(): Unit = {
     implicit val context: BaseContext = new BaseContext(PathMap.empty)
     val dsl: Dsl = BaseDsl()
-    val s = dsl.`if`(dsl.fls).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
+    val s = dsl.when(dsl.fls).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
 
     Assertions.assertEquals("Else", Evaluator.evalSource(s).get)
   }
@@ -231,7 +231,7 @@ class DslTest {
   def testIf3(): Unit = {
     implicit val context: BaseContext = new BaseContext(PathMap.empty)
     val dsl: Dsl = BaseDsl()
-    val s = dsl.`if`(dsl.fls).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
+    val s = dsl.when(dsl.fls).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
       .If(dsl.tr).Then(dsl.literal("Then2"))
 
     Assertions.assertEquals("Then2", Evaluator.evalSource(s).get)
@@ -241,7 +241,7 @@ class DslTest {
   def testIf4(): Unit = {
     implicit val context: BaseContext = new BaseContext(PathMap.empty)
     val dsl: Dsl = BaseDsl()
-    val s = dsl.`if`(dsl.fls).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
+    val s = dsl.when(dsl.fls).Then(dsl.literal("Then")).Else(dsl.literal("Else"))
       .If(dsl.fls).Then(dsl.literal("Then2")).Else(dsl.literal("Else2"))
 
     Assertions.assertEquals("Else2", Evaluator.evalSource(s).get)

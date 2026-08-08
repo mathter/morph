@@ -12,7 +12,7 @@ trait Dsl
 
   def unit[T](source: Source[T]): Source[T] = source
 
-  def `if`[T](condition: Source[Boolean]): If[T]
+  def when[T](condition: Source[Boolean]): When[T]
 }
 
 given [T](using dsl: Dsl): Conversion[T, Source[T]] with {
