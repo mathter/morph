@@ -8,13 +8,9 @@ import scala.collection.mutable
 private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) extends PathMap with Serializable {
   override def apply[T](path: Path): Opt[T] = {
     val paths = path.expand.map(_.local)
-    val valuesMapList: List[InnerMap] = if (paths.length > 1) {
-      paths
-        .take(if (paths.length > 1) paths.length - 1 else 1)
-        .foldLeft(List(this.map))((l: List[InnerMap], r) => getSubMaps(l, r))
-    } else {
-      List(this.map)
-    }
+    val valuesMapList: List[InnerMap] = paths
+      .take(paths.length - 1)
+      .foldLeft(List(this.map))((l: List[InnerMap], r) => getSubMaps(l, r))
     val values = valuesMapList
       .flatMap(innerMap => innerMap.getOrElse(paths.last, Opt.empty))
       .map(reverseTranslate)
@@ -28,12 +24,8 @@ private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) 
 
   override def iget[T](path: Path): Opt[T] = {
     val paths = path.expand.map(_.local)
-    val list: List[InnerMap] = if (paths.length > 1) {
-      paths
-        .foldLeft(List(this.map))((l: List[InnerMap], r) => getSubMaps(l, r))
-    } else {
-      List(this.map)
-    }
+    val list: List[InnerMap] = paths
+      .foldLeft(List(this.map))((l: List[InnerMap], r) => getSubMaps(l, r))
 
     list.length match {
       case 0 => Opt.empty[T]
