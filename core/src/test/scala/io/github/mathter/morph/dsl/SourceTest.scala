@@ -1,8 +1,9 @@
 package io.github.mathter.morph.dsl
 
-import io.github.mathter.morph.data.PathMap
+import io.github.mathter.morph.data.{Opt, PathMap}
 import io.github.mathter.morph.dsl.base.BaseDsl
 import io.github.mathter.morph.dsl.base.eval.{BaseContext, Evaluator}
+import io.github.mathter.morph.eval.EvalException
 import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.{Assertions, Test}
 
@@ -144,5 +145,27 @@ class SourceTest {
 
     Assertions.assertNotNull(d)
     Assertions.assertEquals(value, Evaluator.evalSource(d).get)
+  }
+
+  @Test
+  def testErrorIfNullNonNull(): Unit = {
+    implicit val context: BaseContext = new BaseContext(PathMap.empty)
+    implicit val dsl: Dsl = BaseDsl()
+
+    val value = RandomStringUtils.insecure().nextAlphabetic(10)
+    val s = dsl.literal(value).errorIfNull
+
+    Assertions.assertNotNull(s)
+    Assertions.assertEquals(Opt(value), Evaluator.evalSource(s))
+  }
+
+  @Test
+  def testErrorIfNullNull(): Unit = {
+    implicit val context: BaseContext = new BaseContext(PathMap.empty)
+    implicit val dsl: Dsl = BaseDsl()
+    val s = dsl.nil[String].errorIfNull
+
+    Assertions.assertNotNull(s)
+    Assertions.assertThrows(classOf[EvalException], () => Evaluator.evalSource(s))
   }
 }

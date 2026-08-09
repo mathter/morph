@@ -135,7 +135,17 @@ abstract class AbstractEval[T](implicit val dsl: Dsl, tracer: Tracer = Tracer.tr
     }
   }
 
-  override def errorIfNull: Source[T] = ???
+  override def errorIfNull: Source[T] = {
+    given tracer: Tracer = Tracer.trace3()
+
+    new AbstractEval[T]() {
+      override def evalI(using context: Context): Opt[T] = {
+        val prev = AbstractEval.this.eval
+
+        prev.map(e => if (e != null) e else throw new EvalException(tracer, "Calculation result is null!", null))
+      }
+    }
+  }
 
   override def errorIfEmpty: Source[T] = ???
 
