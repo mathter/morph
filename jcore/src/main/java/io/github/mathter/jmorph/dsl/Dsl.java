@@ -12,15 +12,12 @@ import java.util.function.Supplier;
 /**
  * DSL factory and helper interface for jmorph transformation expressions.
  * <p>
- * Provides methods to adapt plain Source<T> instances into richer,
+ * Provides methods to adapt plain {@code Source<T>} instances into richer,
  * type-specific source interfaces (StringSource, NumberSource, ListSource,
  * BooleanSource and Group) and to create literal sources from values or
  * lazily-evaluated suppliers. Implementations bridge the underlying
  * morph.dsl.Source primitives and the higher-level jmorph DSL used by
  * transformations.
- *
- * @options none
- * @packages io.github.mathter.jmorph.dsl
  */
 public interface Dsl extends
         OriginDsl,
