@@ -9,8 +9,6 @@ import java.util.List;
  *
  * @param <K> key type for each group entry
  * @param <T> element type contained in each grouped list
- * @options none
- * @packages io.github.mathter.jmorph.dsl
  */
 public interface Group<K, T> extends ListSource<Pair<K, List<T>>> {
 }
