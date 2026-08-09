@@ -129,48 +129,72 @@ public interface Dsl extends
     /**
      * Convenience overload to create a byte literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal byte value
+     * @return a {@link NumberSource} producing the provided byte
      */
     public NumberSource<Byte> literal(Byte value);
 
     /**
      * Convenience overload to create a short literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal short value
+     * @return a {@link NumberSource} producing the provided short
      */
     public NumberSource<Short> literal(Short value);
 
     /**
      * Convenience overload to create an integer literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal integer value
+     * @return a {@link NumberSource} producing the provided integer
      */
     public NumberSource<Integer> literal(Integer value);
 
     /**
      * Convenience overload to create a long literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal long value
+     * @return a {@link NumberSource} producing the provided long
      */
     public NumberSource<Long> literal(Long value);
 
     /**
      * Convenience overload to create a float literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal float value
+     * @return a {@link NumberSource} producing the provided float
      */
     public NumberSource<Float> literal(Float value);
 
     /**
      * Convenience overload to create a double literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal double value
+     * @return a {@link NumberSource} producing the provided double
      */
     public NumberSource<Double> literal(Double value);
 
     /**
      * Convenience overload to create a BigInteger literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal BigInteger value
+     * @return a {@link NumberSource} producing the provided BigInteger
      */
     public NumberSource<BigInteger> literal(BigInteger value);
 
     /**
      * Convenience overload to create a BigDecimal literal wrapped as a
      * {@link NumberSource}.
+     *
+     * @param value the literal BigDecimal value
+     * @return a {@link NumberSource} producing the provided BigDecimal
      */
     public NumberSource<BigDecimal> literal(BigDecimal value);
 
@@ -185,6 +209,9 @@ public interface Dsl extends
 
     /**
      * Convenience overload to create a string literal source.
+     *
+     * @param value the literal string value
+     * @return a {@link StringSource} producing the provided string
      */
     public StringSource literal(String value);
 
@@ -199,8 +226,11 @@ public interface Dsl extends
     /**
      * Convenience overload to create a boolean literal wrapped as a
      * {@link BooleanSource}.
+     *
+     * @param value the literal boolean value
+     * @return a {@link BooleanSource} producing the provided boolean
      */
-    public BooleanSource literal(Boolean literal);
+    public BooleanSource literal(Boolean value);
 
     /**
      * Creates a lazily-evaluated boolean literal from a supplier.
