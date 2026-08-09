@@ -15,6 +15,8 @@ import java.util.function.Function;
  * a {@link Group} result.
  *
  * @param <T> element type of the list
+ * @options none
+ * @packages io.github.mathter.jmorph.dsl
  */
 public interface ListSource<T> extends Source<List<T>> {
     /**

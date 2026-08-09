@@ -10,6 +10,9 @@ import io.github.mathter.morph.dsl.Source;
  * checks, returning appropriate {@link StringSource}, {@link NumberSource}
  * or {@link BooleanSource} wrappers so these operations can be composed
  * inside transformation DSL expressions.
+ *
+ * @options none
+ * @packages io.github.mathter.jmorph.dsl
  */
 public interface StringSource extends Source<String> {
     /**

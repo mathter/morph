@@ -18,6 +18,9 @@ import java.util.function.Supplier;
  * lazily-evaluated suppliers. Implementations bridge the underlying
  * morph.dsl.Source primitives and the higher-level jmorph DSL used by
  * transformations.
+ *
+ * @options none
+ * @packages io.github.mathter.jmorph.dsl
  */
 public interface Dsl extends
         OriginDsl,

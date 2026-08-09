@@ -8,6 +8,9 @@ import io.github.mathter.morph.dsl.Then;
  * <p>
  * Adds logical combinators (and/or/xor/not) and a {@code then} terminal
  * to chain side-effecting or conditional continuations.
+ *
+ * @options none
+ * @packages io.github.mathter.jmorph.dsl
  */
 public interface BooleanSource extends Source<Boolean> {
     /**

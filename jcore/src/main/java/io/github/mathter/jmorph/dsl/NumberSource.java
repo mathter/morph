@@ -11,6 +11,8 @@ import io.github.mathter.morph.dsl.Source;
  * fluent arithmetic capabilities used in transformation definitions.
  *
  * @param <T> the concrete numeric type
+ * @options none
+ * @packages io.github.mathter.jmorph.dsl
  */
 public interface NumberSource<T extends Number> extends Source<T> {
     /**
