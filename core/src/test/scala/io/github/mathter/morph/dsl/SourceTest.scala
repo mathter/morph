@@ -168,4 +168,26 @@ class SourceTest {
     Assertions.assertNotNull(s)
     Assertions.assertThrows(classOf[EvalException], () => Evaluator.evalSource(s))
   }
+
+  @Test
+  def testErrorIfEmptyNonEmpty(): Unit = {
+    implicit val context: BaseContext = new BaseContext(PathMap.empty)
+    implicit val dsl: Dsl = BaseDsl()
+
+    val value = RandomStringUtils.insecure().nextAlphabetic(10)
+    val s = dsl.literal(value).errorIfEmpty
+
+    Assertions.assertNotNull(s)
+    Assertions.assertEquals(Opt(value), Evaluator.evalSource(s))
+  }
+
+  @Test
+  def testErrorIfEmptyEmpty(): Unit = {
+    implicit val context: BaseContext = new BaseContext(PathMap.empty)
+    implicit val dsl: Dsl = BaseDsl()
+    val s = dsl.nothing[String].errorIfEmpty
+
+    Assertions.assertNotNull(s)
+    Assertions.assertThrows(classOf[EvalException], () => Evaluator.evalSource(s))
+  }
 }
