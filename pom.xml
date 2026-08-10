@@ -123,6 +123,10 @@
                                 <args>
                                     <arg>-nobootcp</arg>
                                 </args>
+                                <sourceDir>${project.build.outputDirectory}</sourceDir>
+                                <includes>
+                                    <include>**/*.tasty</include>
+                                </includes>
                                 <dependencies>
                                     <dependency>
                                         <groupId>org.scala-lang</groupId>
