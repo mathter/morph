@@ -1,10 +1,10 @@
-package io.github.mathter.morph.dsl.base.eval
+package io.github.mathter.morph.dsl.base
 
 import io.github.mathter.morph.data.Opt
 import io.github.mathter.morph.dsl.{Dsl, Group, Source}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 
-class GroupEval[K, E](val listEval: Eval[List[E]], val key: Source[E] => Source[K])(implicit dsl: Dsl, tracer: Tracer) extends AbstractEval[List[(K, List[E])]], Group[K, E] {
+private class GroupEval[K, E](val listEval: Eval[List[E]], val key: Source[E] => Source[K])(implicit dsl: Dsl, tracer: Tracer) extends AbstractEval[List[(K, List[E])]], Group[K, E] {
   override def evalI(using context: Context): Opt[List[(K, List[E])]] = {
     this.listEval.eval.map(_.groupBy(e => {
         val literal = new LiteralEval(e)

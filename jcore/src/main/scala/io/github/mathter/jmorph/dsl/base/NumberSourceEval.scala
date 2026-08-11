@@ -3,7 +3,7 @@ package io.github.mathter.jmorph.dsl.base
 import io.github.mathter.jmorph.dsl.NumberSource
 import io.github.mathter.morph.data.Opt
 import io.github.mathter.morph.dsl.Dsl
-import io.github.mathter.morph.dsl.base.eval.AbstractEval
+import io.github.mathter.morph.dsl.base.AbstractEval
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 
 import scala.math.Integral.Implicits.infixIntegralOps

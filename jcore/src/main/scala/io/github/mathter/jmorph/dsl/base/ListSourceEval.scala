@@ -3,8 +3,7 @@ package io.github.mathter.jmorph.dsl.base
 import io.github.mathter.jmorph.dsl.base.BaseDsl.{*, given}
 import io.github.mathter.jmorph.dsl.{Group, ListSource}
 import io.github.mathter.morph.data.Opt
-import io.github.mathter.morph.dsl.base.eval.AbstractEval
-import io.github.mathter.morph.dsl.base.given
+import io.github.mathter.morph.dsl.base.{AbstractEval, given}
 import io.github.mathter.morph.dsl.{Dsl, Source, Group as zGroup, given}
 import io.github.mathter.morph.eval.{Context, Tracer}
 

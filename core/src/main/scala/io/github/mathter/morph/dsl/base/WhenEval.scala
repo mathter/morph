@@ -1,10 +1,10 @@
-package io.github.mathter.morph.dsl.base.eval
+package io.github.mathter.morph.dsl.base
 
 import io.github.mathter.morph.data.Opt
-import io.github.mathter.morph.dsl.{Dsl, Else, When, Source, Then}
+import io.github.mathter.morph.dsl.{Dsl, Else, Source, Then, When}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 
-class WhenEval[T](val conditionEval: Eval[Boolean])(implicit dsl: Dsl, tracer: Tracer) extends AbstractEval[T], When[T], Then[T], Else[T] {
+private class WhenEval[T](val conditionEval: Eval[Boolean])(implicit dsl: Dsl, tracer: Tracer) extends AbstractEval[T], When[T], Then[T], Else[T] {
   private var thenEval: Eval[T] = null;
 
   private var elseEval: Eval[T] = null;

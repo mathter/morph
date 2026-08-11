@@ -1,8 +1,8 @@
-package io.github.mathter.morph.dsl.base.eval
+package io.github.mathter.morph.dsl.base
 
 import io.github.mathter.morph.data.Opt
 import io.github.mathter.morph.eval.Context
 
-trait Accept[T] {
+private trait Accept[T] {
   def apply(opt: Opt[T], context: Context): Opt[T]
 }
