@@ -2,7 +2,7 @@ package io.github.mathter.jmorph.dsl.base
 
 import io.github.mathter.jmorph.dsl.BooleanSource
 import io.github.mathter.morph.data.Opt
-import io.github.mathter.morph.dsl.base.eval.AbstractEval
+import io.github.mathter.morph.dsl.base.AbstractEval
 import io.github.mathter.morph.dsl.{Dsl, Source, Then}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 

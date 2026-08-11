@@ -3,8 +3,7 @@ package io.github.mathter.jmorph.dsl.base
 import io.github.mathter.jmorph.dsl.base.JavaNumeric.*
 import io.github.mathter.jmorph.dsl.{BooleanSource, Dsl, ListSource, NumberSource, StringSource}
 import io.github.mathter.morph.data.{Opt, PathMap}
-import io.github.mathter.morph.dsl.base.eval.AbstractEval
-import io.github.mathter.morph.dsl.base.given
+import io.github.mathter.morph.dsl.base.{AbstractEval, given}
 import io.github.mathter.morph.dsl.{Acceptor, Source, base, Dsl as zDsl}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 

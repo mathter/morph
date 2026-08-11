@@ -69,7 +69,7 @@ private case class EPath(val segment: String, val segmentQ: String, val parent: 
   protected def writeReplace(): AnyRef = new Serializer(this.segment, this.segmentQ, this.parent.asInstanceOf[EPath])
 }
 
-class Serializer(@transient var segment: String, @transient var segmentQ: String, @transient var parent: EPath) extends Serializable {
+private class Serializer(@transient var segment: String, @transient var segmentQ: String, @transient var parent: EPath) extends Serializable {
   private def writeObject(out: ObjectOutputStream): Unit = {
     out.writeObject(this.segment)
     out.writeObject(this.segmentQ)
