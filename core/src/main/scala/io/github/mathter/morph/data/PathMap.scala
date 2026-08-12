@@ -191,6 +191,23 @@ trait PathMap {
    * @return this `PathMap` or a Scala-compatible equivalent
    */
   def asScala: PathMap
+
+  /**
+   * Returns a read-only view of this `PathMap`.
+   *
+   * The returned `ImmutablePathMap` is backed by the same underlying data as
+   * this map: `update` and `put` throw an `UnsupportedOperationException`,
+   * and every nested `PathMap` returned by a read operation is itself an
+   * `ImmutablePathMap`.
+   *
+   * @return an immutable view of this map
+   *
+   * @example
+   * {{{
+   * val readOnly = pathMap.asImmutable
+   * }}}
+   */
+  def asImmutable: ImmutablePathMap = ImmutablePathMap.from(this)
 }
 
 object PathMap {

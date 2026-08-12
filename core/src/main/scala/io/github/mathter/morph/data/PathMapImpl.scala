@@ -220,6 +220,74 @@ private class JEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(ma
 
   override def asScala: PathMap = new EPathMap(this.map)
 
+  override def asImmutable: ImmutablePathMap = new ImmutableJEPathMap(this.map)
+
+  override inline protected def translateList[E](x: List[E]): Any = {
+    import scala.jdk.CollectionConverters.*
+
+    x.asJava
+  }
+}
+
+/**
+ * Read-only Scala-oriented `PathMap` implementation.
+ *
+ * This implementation shares the storage and retrieval semantics of
+ * [[AbstractPathMap]] but is read-only: [[update]] and [[put]] throw an
+ * `UnsupportedOperationException`. Every nested `PathMap` returned by a read
+ * operation is itself an [[ImmutableEPathMap]], so read-only semantics extend
+ * recursively to nested values and list elements.
+ *
+ * @param map the backing [[InnerMap]] instance (shared by views produced by
+ *            asJava/asScala when appropriate)
+ */
+private class ImmutableEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with ImmutablePathMap {
+  protected def reverseTranslate(value: Any): Any = {
+    value match {
+      case map: InnerMap => new ImmutableEPathMap(map)
+      case map: PathMap => ImmutablePathMap.from(map)
+      case _ => value
+    }
+  }
+
+  override def update[T](path: Path, value: T): Unit = {
+    throw new UnsupportedOperationException("ImmutablePathMap does not support update operation")
+  }
+
+  override def asJava: JPathMap = new ImmutableJEPathMap(this.map)
+
+  override def asScala: PathMap = this
+
+  override inline protected def translateList[E](x: List[E]): Any = x
+}
+
+/**
+ * Read-only Java-oriented `PathMap` implementation (ImmutableJPathMap).
+ *
+ * This implementation presents list values as `java.util.List` instances so
+ * Java callers get the familiar collection types. It is read-only: [[update]]
+ * and [[put]] throw an `UnsupportedOperationException`.
+ *
+ * @param map the backing [[InnerMap]] instance (shared by views produced by
+ *            asJava/asScala when appropriate)
+ */
+private class ImmutableJEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with ImmutableJPathMap {
+  protected def reverseTranslate(value: Any): Any = {
+    value match {
+      case map: InnerMap => new ImmutableEPathMap(map)
+      case map: PathMap => ImmutablePathMap.from(map)
+      case _ => value
+    }
+  }
+
+  override def update[T](path: Path, value: T): Unit = {
+    throw new UnsupportedOperationException("ImmutableJPathMap does not support update operation")
+  }
+
+  override def asJava: JPathMap = this
+
+  override def asScala: PathMap = new ImmutableEPathMap(this.map)
+
   override inline protected def translateList[E](x: List[E]): Any = {
     import scala.jdk.CollectionConverters.*
 
