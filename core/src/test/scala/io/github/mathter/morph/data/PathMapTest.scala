@@ -98,6 +98,18 @@ class PathMapTest {
   }
 
   @Test
+  def testEmpty(): Unit = {
+    val pm = PathMap.empty
+
+    Assertions.assertTrue(pm.isEmpty)
+    Assertions.assertFalse(pm.nonEmpty)
+
+    pm("p0") = "p0"
+    Assertions.assertFalse(pm.isEmpty)
+    Assertions.assertTrue(pm.nonEmpty)
+  }
+
+  @Test
   def testKeys(): Unit = {
     val pm = PathMap.empty
 
