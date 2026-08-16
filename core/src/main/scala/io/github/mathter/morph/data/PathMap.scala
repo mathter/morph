@@ -128,6 +128,20 @@ trait PathMap {
   def jkeys: util.Set[Path] = this.keys.asJava
 
   /**
+   * Returns `true` if this `PathMap` contains no entries.
+   *
+   * @return `true` if this map is empty, `false` otherwise
+   */
+  def isEmpty: Boolean = this.keys.isEmpty
+
+  /**
+   * Returns `true` if this `PathMap` contains at least one entry.
+   *
+   * @return `true` if this map is non-empty, `false` otherwise
+   */
+  def nonEmpty: Boolean = !this.isEmpty
+
+  /**
    * Returns all key-value entries in this `PathMap`.
    *
    * @return a list of tuples where the first element is the path and the second is the value
