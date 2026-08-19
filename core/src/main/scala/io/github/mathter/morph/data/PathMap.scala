@@ -231,6 +231,22 @@ trait PathMap {
    * }}}
    */
   def copy: PathMap
+
+  /**
+   * Removes all values at the specified path.
+   *
+   * If the path expands to multiple locations (e.g. via wildcards), values
+   * are removed from each matching location. Removing a non-existent path has
+   * no effect.
+   *
+   * @param path the path to remove
+   * @example
+   * {{{
+   * pathMap("authors/name") = "John Doe"
+   * pathMap.remove("authors/name")  // value is gone
+   * }}}
+   */
+  def remove(path: Path): Unit
 }
 
 object PathMap {

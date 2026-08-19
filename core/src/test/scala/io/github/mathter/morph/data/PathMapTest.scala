@@ -163,6 +163,31 @@ class PathMapTest {
   }
 
   @Test
+  def testRemove(): Unit = {
+    val pm = PathMap.empty
+
+    pm("p0/p1") = "v0"
+    pm("p0/p1") = "v1"
+    pm("p0/p2") = "v2"
+    pm("p3") = "v3"
+
+    pm.remove("p0/p1")
+
+    Assertions.assertEquals(Opt.empty, pm("p0/p1"))
+    Assertions.assertEquals(Opt("v2"), pm("p0/p2"))
+    Assertions.assertEquals(Opt("v3"), pm("p3"))
+
+    pm.remove("p3")
+
+    Assertions.assertEquals(Opt.empty, pm("p3"))
+    Assertions.assertEquals(Opt("v2"), pm("p0/p2"))
+
+    pm.remove("p0/p2")
+
+    Assertions.assertEquals(Opt.empty, pm("p0/p2"))
+  }
+
+  @Test
   def testCopy(): Unit = {
     val origin = PathMap.empty
 

@@ -101,6 +101,14 @@ private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap(0
 
   override def keys: Set[Path] = this.map.keySet.toSet
 
+  override def remove(path: Path): Unit = {
+    val paths = path.expand.map(_.local)
+    val valuesMapList: List[InnerMap] = paths
+      .take(paths.length - 1)
+      .foldLeft(List(this.map))((l: List[InnerMap], r) => getSubMaps(l, r))
+    valuesMapList.foreach(innerMap => innerMap.remove(paths.last))
+  }
+
   override def entries: List[(Path, ?)] = {
     this.map.keySet
       .map(key =>
@@ -280,6 +288,10 @@ private class ImmutableEPathMap(map: InnerMap = new InnerMap(0)) extends Abstrac
     throw new UnsupportedOperationException("ImmutablePathMap does not support update operation")
   }
 
+  override def remove(path: Path): Unit = {
+    throw new UnsupportedOperationException("ImmutablePathMap does not support remove operation")
+  }
+
   override def asJava: JPathMap = new ImmutableJEPathMap(this.map)
 
   override def asScala: PathMap = this
@@ -310,6 +322,10 @@ private class ImmutableJEPathMap(map: InnerMap = new InnerMap(0)) extends Abstra
 
   override def update[T](path: Path, value: T): Unit = {
     throw new UnsupportedOperationException("ImmutableJPathMap does not support update operation")
+  }
+
+  override def remove(path: Path): Unit = {
+    throw new UnsupportedOperationException("ImmutableJPathMap does not support remove operation")
   }
 
   override def asJava: JPathMap = this
