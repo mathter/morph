@@ -216,6 +216,20 @@ trait PathMap {
    */
   def asImmutable: ImmutablePathMap = ImmutablePathMap.from(this)
 
+  /**
+   * Returns a deep copy of this `PathMap`.
+   *
+   * The returned `PathMap` shares no mutable state with this map: subsequent
+   * updates to either map do not affect the other, including nested structures.
+   * Note that stored values themselves are not cloned; they are shared by
+   * reference between the original and the copy.
+   *
+   * @return a deep copy of this map
+   * @example
+   * {{{
+   * val copy = pathMap.copy
+   * }}}
+   */
   def copy: PathMap
 }
 
