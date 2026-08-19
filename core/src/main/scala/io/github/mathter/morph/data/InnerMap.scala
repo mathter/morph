@@ -2,20 +2,47 @@ package io.github.mathter.morph.data
 
 import io.github.mathter.morph.path.Path
 
-import scala.collection.generic.DefaultSerializationProxy
-import scala.collection.{Factory, mutable}
+import java.io.{ObjectInputStream, ObjectOutputStream}
+import scala.collection.mutable
 
-private class InnerMap extends mutable.LinkedHashMap[Path, mutable.Queue[Any]] with Serializable {
-  protected override def writeReplace(): AnyRef = new DefaultSerializationProxy(new DeserializationFactory, this)
-
-  private class DeserializationFactory extends Factory[(Path, mutable.Queue[Any]), InnerMap] with Serializable {
-    override def fromSpecific(it: IterableOnce[(Path, mutable.Queue[Any])]): InnerMap = new InnerMap().addAll(it)
-
-    override def newBuilder: mutable.Builder[(Path, mutable.Queue[Any]), InnerMap] =
-      new mutable.GrowableBuilder(new InnerMap())
-  }
+private case class InnerMap(val id: Int)
+  extends mutable.LinkedHashMap[Path, mutable.Queue[Any]]
+    with Serializable {
+  protected override def writeReplace(): AnyRef = new Serialization(this)
 }
 
-private object InnerMap {
+@SerialVersionUID(1L)
+private[data] class Serialization(@transient var map: InnerMap)
+  extends Serializable {
+  private def writeObject(out: ObjectOutputStream): Unit = {
+    out.writeInt(map.id)
+    out.writeInt(map.size)
+
+    this.map
+      .foreach {
+        x =>
+          out.writeObject(x)
+      }
+  }
+
+  private def readObject(in: ObjectInputStream): Unit = {
+    val id = in.readInt()
+    var k = in.readInt()
+
+    if (k >= 0) {
+      this.map = new InnerMap(id)
+      this.map.sizeHint(k)
+
+      while (k > 0) {
+        this.map.addOne(in.readObject().asInstanceOf[(Path, mutable.Queue[Any])])
+        k -= 1
+      }
+    }
+  }
+
+  protected def readResolve(): Any = this.map
+}
+
+private[data] object InnerMap {
   def newQueue: mutable.Queue[Any] = mutable.Queue.empty
 }

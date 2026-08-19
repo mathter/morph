@@ -45,7 +45,6 @@ trait PathMap {
    * @param path the path to retrieve
    * @tparam T the expected type of the value
    * @return an `Opt` containing the value if found, `None` otherwise
-   *
    * @example
    * {{{
    * val value: Opt[String] = pathMap("authors/name")
@@ -73,7 +72,6 @@ trait PathMap {
    * @param path the path segment to retrieve
    * @tparam T the expected type of the value
    * @return an `Opt` containing the value if found, `None` otherwise
-   *
    * @throws MoreThenOneItemException if the path matches more than one item
    */
   def iget[T](path: Path): Opt[T]
@@ -83,10 +81,9 @@ trait PathMap {
    *
    * Alias for [[update]]. Creates intermediate paths if they don't exist.
    *
-   * @param path the path where to store the value
+   * @param path  the path where to store the value
    * @param value the value to store
    * @tparam T the type of the value
-   *
    * @example
    * {{{
    * pathMap("authors/name") = "John Doe"
@@ -100,7 +97,7 @@ trait PathMap {
    * Creates any intermediate paths that don't exist. If a list value is stored at the path,
    * multiple values can exist at the same path.
    *
-   * @param path the path where to store the value
+   * @param path  the path where to store the value
    * @param value the value to store (can be a PathMap, list, or scalar value)
    * @tparam T the type of the value
    */
@@ -110,7 +107,6 @@ trait PathMap {
    * Returns all keys (top-level paths) in this `PathMap`.
    *
    * @return a set of all paths stored in this map
-   *
    * @example
    * {{{
    * val keys: Set[Path] = pathMap.keys  // Set("title", "authors", "isbn")
@@ -145,7 +141,6 @@ trait PathMap {
    * Returns all key-value entries in this `PathMap`.
    *
    * @return a list of tuples where the first element is the path and the second is the value
-   *
    * @example
    * {{{
    * val entries: List[(Path, ?)] = pathMap.entries
@@ -171,7 +166,6 @@ trait PathMap {
    * @param f a function that transforms `Path` objects into keys
    * @tparam K the type of the resulting keys
    * @return a flattened Scala `Map` with transformed keys
-   *
    * @example
    * {{{
    * val flatMap = pathMap.toMap(_.segment)  // Keys become path segments
@@ -215,13 +209,14 @@ trait PathMap {
    * `ImmutablePathMap`.
    *
    * @return an immutable view of this map
-   *
    * @example
    * {{{
    * val readOnly = pathMap.asImmutable
    * }}}
    */
   def asImmutable: ImmutablePathMap = ImmutablePathMap.from(this)
+
+  def copy: PathMap
 }
 
 object PathMap {
@@ -229,7 +224,6 @@ object PathMap {
    * Creates an empty `PathMap` with Scala collection semantics.
    *
    * @return an empty, mutable `PathMap`
-   *
    * @example
    * {{{
    * val pathMap = PathMap.empty

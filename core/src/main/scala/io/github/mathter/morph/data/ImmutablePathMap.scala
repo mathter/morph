@@ -95,7 +95,7 @@ object ImmutablePathMap {
   private def toInnerMap(pathMap: PathMap): InnerMap = {
     import scala.jdk.CollectionConverters.*
 
-    val map = new InnerMap
+    val map = new InnerMap(0)
 
     pathMap.entries.foreach { case (path, value) =>
       value match {

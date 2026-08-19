@@ -27,7 +27,7 @@ import scala.collection.mutable
  * each path segment and that nested `InnerMap` instances represent nested
  * PathMap structures.
  */
-private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) extends PathMap with Serializable {
+private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap(0)) extends PathMap with Serializable {
   override def apply[T](path: Path): Opt[T] = {
     val paths = path.expand.map(_.local)
     val valuesMapList: List[InnerMap] = paths
@@ -70,7 +70,7 @@ private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) 
       val element = tmp.getOrElse(paths(i), null)
 
       if (element == null) {
-        val newMap = new InnerMap
+        val newMap = new InnerMap(this.map.id)
         val newQueue = InnerMap.newQueue :+ newMap
         tmp.put(paths(i), newQueue)
         tmp = newMap
@@ -79,6 +79,14 @@ private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) 
           .filter(_.isInstanceOf[InnerMap])
           .map(_.asInstanceOf[InnerMap])
           .head
+
+        if (this.map.id != tmp.id) {
+          val index = element.indexOf(tmp)
+          val newMap = AbstractPathMap.copy(tmp, this.map.id)
+          element.drop(index)
+          element(index) = newMap
+          tmp = newMap
+        }
       }
     }
 
@@ -181,7 +189,7 @@ private sealed abstract class AbstractPathMap(val map: InnerMap = new InnerMap) 
  * @param map the backing [[InnerMap]] instance (shared by views produced by
  *            asJava/asScala when appropriate)
  */
-private class EPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) {
+private class EPathMap(map: InnerMap = new InnerMap(0)) extends AbstractPathMap(map) {
   protected def reverseTranslate(value: Any): Any = {
     value match {
       case map: InnerMap => new EPathMap(map)
@@ -194,6 +202,22 @@ private class EPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map
   override def asScala: PathMap = this
 
   override inline protected def translateList[E](x: List[E]): Any = x
+
+  override def copy: PathMap = new EPathMap(AbstractPathMap.copy(this.map, this.map.id + 1))
+}
+
+private object AbstractPathMap {
+  infix def copy(x: InnerMap, id: Int): InnerMap = {
+    val tmp = new InnerMap(id)
+    x.foreach {
+      (p, v) =>
+        tmp(p) = v match {
+          case x: mutable.Queue[Any] => InnerMap.newQueue.addAll(x)
+          case x => x
+        }
+    }
+    tmp
+  }
 }
 
 /**
@@ -208,7 +232,7 @@ private class EPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map
  * @param map the backing [[InnerMap]] instance (shared by views produced by
  *            asJava/asScala when appropriate)
  */
-private class JEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with JPathMap {
+private class JEPathMap(map: InnerMap = new InnerMap(0)) extends AbstractPathMap(map) with JPathMap {
   protected def reverseTranslate(value: Any): Any = {
     value match {
       case map: InnerMap => new EPathMap(map)
@@ -227,6 +251,8 @@ private class JEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(ma
 
     x.asJava
   }
+
+  override def copy: PathMap = new JEPathMap(AbstractPathMap.copy(this.map, this.map.id + 1))
 }
 
 /**
@@ -241,7 +267,7 @@ private class JEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(ma
  * @param map the backing [[InnerMap]] instance (shared by views produced by
  *            asJava/asScala when appropriate)
  */
-private class ImmutableEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with ImmutablePathMap {
+private class ImmutableEPathMap(map: InnerMap = new InnerMap(0)) extends AbstractPathMap(map) with ImmutablePathMap {
   protected def reverseTranslate(value: Any): Any = {
     value match {
       case map: InnerMap => new ImmutableEPathMap(map)
@@ -259,6 +285,8 @@ private class ImmutableEPathMap(map: InnerMap = new InnerMap) extends AbstractPa
   override def asScala: PathMap = this
 
   override inline protected def translateList[E](x: List[E]): Any = x
+
+  override def copy: PathMap = new EPathMap(AbstractPathMap.copy(this.map, this.map.id + 1))
 }
 
 /**
@@ -271,7 +299,7 @@ private class ImmutableEPathMap(map: InnerMap = new InnerMap) extends AbstractPa
  * @param map the backing [[InnerMap]] instance (shared by views produced by
  *            asJava/asScala when appropriate)
  */
-private class ImmutableJEPathMap(map: InnerMap = new InnerMap) extends AbstractPathMap(map) with ImmutableJPathMap {
+private class ImmutableJEPathMap(map: InnerMap = new InnerMap(0)) extends AbstractPathMap(map) with ImmutableJPathMap {
   protected def reverseTranslate(value: Any): Any = {
     value match {
       case map: InnerMap => new ImmutableEPathMap(map)
@@ -293,4 +321,6 @@ private class ImmutableJEPathMap(map: InnerMap = new InnerMap) extends AbstractP
 
     x.asJava
   }
+
+  override def copy: JPathMap = new JEPathMap(AbstractPathMap.copy(this.map, this.map.id + 1))
 }

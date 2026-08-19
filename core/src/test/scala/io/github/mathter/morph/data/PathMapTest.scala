@@ -161,6 +161,22 @@ class PathMapTest {
     Assertions.assertNotNull(result)
     Assertions.assertEquals(10, result("p0/p1").get.asInstanceOf[Int])
   }
+
+  @Test
+  def testCopy(): Unit = {
+    val origin = PathMap.empty
+
+    origin("p00/p10/p20") = "v20"
+    origin("p00/p10/p20") = "v20a"
+    origin("p00/p10/p21") = "v21"
+    origin("p00/p10/p23") = "v23"
+
+    val copy = origin.copy
+    copy("p00/p10/p20") = "v20c"
+    copy("p00/p11") = "v11c"
+
+    Assertions.assertNotSame(origin, copy)
+  }
 }
 
 object PathMapTest {
