@@ -2,7 +2,7 @@ package io.github.mathter.morph.dsl.base
 
 import io.github.mathter.morph.data.{Opt, PathMap}
 import io.github.mathter.morph.dsl.base.BaseDsl.DEFAULT_DESTINATION_TAG
-import io.github.mathter.morph.dsl.{Acceptor, Dsl, Group, When, Source}
+import io.github.mathter.morph.dsl.{Acceptor, Dsl, Group, Source, When}
 import io.github.mathter.morph.eval.{Context, Eval, Tracer}
 import io.github.mathter.morph.path.Path
 

@@ -136,7 +136,7 @@ object Path {
   inline def apply(segment: String, segmentQ: String | Null): Path = {
     segment.split(Path.DELIMITER)
       .filter(e => e != null && !"".equals(e))
-      .foldLeft[Path](null)((left, right) => if (left == null) EPathFactory.of(right, segmentQ, null) else left.path(right))
+      .foldLeft[Path](null)((left, right) => if (left == null) EPathFactory(right, segmentQ, null) else left.path(right))
   }
 
   /** Alias for [[apply(segment, segmentQ)]]. */
