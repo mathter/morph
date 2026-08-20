@@ -18,6 +18,7 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <scala.version>3.8.4</scala.version>
+        <jackson.version>3.1.5</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -36,7 +37,7 @@
             <dependency>
                 <groupId>tools.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>3.1.5</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scala-lang</groupId>
@@ -136,7 +137,7 @@
                                     <dependency>
                                         <groupId>tools.jackson.core</groupId>
                                         <artifactId>jackson-databind</artifactId>
-                                        <version>3.1.5</version>
+                                        <version>${jackson.version}</version>
                                     </dependency>
                                 </dependencies>
                             </configuration>
@@ -181,6 +182,12 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
