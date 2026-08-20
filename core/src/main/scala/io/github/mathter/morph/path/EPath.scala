@@ -7,13 +7,13 @@ private case class EPath(val segment: String, val segmentQ: String, val parent: 
 
   private var localCache: Path = null
 
-  override def path(seqment: String): Path = EPathFactory.of(seqment, null, this)
+  override def path(seqment: String): EPath = EPathFactory(seqment, null, this)
 
-  override def path(seqment: String, seqmentQ: String): Path = EPathFactory.of(seqment, seqmentQ, this)
+  override def path(seqment: String, seqmentQ: String): Path = EPathFactory(seqment, seqmentQ, this)
 
   override def local: Path = {
     if (this.localCache == null) {
-      this.localCache = EPathFactory.of(this.segment, this.segmentQ, null)
+      this.localCache = EPathFactory(this.segment, this.segmentQ, null)
     }
 
     this.localCache

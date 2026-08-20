@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import org.xml.sax.ext.DefaultHandler2
 import org.xml.sax.{Attributes, Locator}
 
-import scala.collection.{immutable, mutable}
+import scala.collection.mutable
 
 /**
  * SAX DefaultHandler implementation that dispatches element events to a
