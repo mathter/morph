@@ -10,7 +10,8 @@
     </parent>
 
     <artifactId>core</artifactId>
-
+    <name>Morph Core</name>
+    <description>Morph is a Scala-based Domain Specific Language (DSL) and evaluation engine designed for declarative path-based data manipulation and extraction, featuring core path mapping and evaluation logic.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

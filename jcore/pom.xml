@@ -10,7 +10,8 @@
     </parent>
 
     <artifactId>jcore</artifactId>
-
+    <name>Morph JCore</name>
+    <description>Morph is a Scala-based Domain Specific Language (DSL) and evaluation engine designed for declarative path-based data manipulation and extraction, providing programmatic bindings for Java and Scala environments.</description>
     <dependencies>
         <dependency>
             <groupId>io.github.mathter.morph</groupId>
