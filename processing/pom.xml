@@ -10,7 +10,8 @@
     </parent>
 
     <artifactId>processing</artifactId>
-
+    <name>Morph Processing</name>
+    <description>Morph is a Scala-based Domain Specific Language (DSL) and evaluation engine designed for declarative path-based data manipulation and extraction, providing capabilities to handle data formats such as XML through SAX parsing.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
