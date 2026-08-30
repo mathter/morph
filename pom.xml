@@ -9,7 +9,9 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Morph</name>
     <url>https://github.com/mathter/morph</url>
-    <description>Morph is a Scala-based Domain Specific and evaluation engine designed for declarative path-based data manipulation and extraction.</description>
+    <description>Morph is a Scala-based Domain Specific and evaluation engine designed for declarative path-based data
+        manipulation and extraction.
+    </description>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -124,7 +126,7 @@
                     <artifactId>scala-maven-plugin</artifactId>
                     <version>4.9.10</version>
                     <configuration>
-<!--                        <recompileMode>incremental</recompileMode>-->
+                        <!--                        <recompileMode>incremental</recompileMode>-->
                         <scalaVersion>${scala.version}</scalaVersion>
                     </configuration>
                     <executions>
@@ -204,24 +206,35 @@
             </plugins>
         </pluginManagement>
         <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.2.4</version>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                            <configuration>
-                                <passphrase>${gpg.passphrase}</passphrase>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <passphrase>${gpg.passphrase}</passphrase>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com</url>
+        </repository>
+        <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
